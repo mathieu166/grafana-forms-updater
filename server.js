@@ -32,7 +32,7 @@ app.post('/validator/update', async (req, res) => {
       DO UPDATE SET ip_host = EXCLUDED.ip_host, port = EXCLUDED.port;
     `;
     
-    await client.query(query, [address, ip_host, port]);
+    await client.query(query, [address.toLowerCase(), ip_host, port]);
     res.status(200).send('Validator spec updated or inserted successfully.');
   } catch (error) {
     console.error('Error updating/inserting validator spec:', error);
