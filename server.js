@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+var cors = require('cors')
 const { Client } = require('pg'); 
 const bodyParser = require('body-parser');
 const app = express();
@@ -19,6 +20,13 @@ client.connect();
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
+app.use(cors())
+
+// Default GET route
+app.get('/', (req, res) => {
+  res.status(200).send('Server is up and running.');
+});
+
 
 // Endpoint to update or insert validator specs
 app.post('/validator/update', async (req, res) => {
