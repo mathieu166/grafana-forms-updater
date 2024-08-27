@@ -1,6 +1,7 @@
 signers.db
 allowedsigner.txt
 blocks.csv
+package-lock.json
 
 # === Rules for `node_modules` ===
 !**/node_modules/**
