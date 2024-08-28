@@ -34,7 +34,7 @@ app.post('/validator/update', async (req, res) => {
       DO UPDATE SET ip_host = EXCLUDED.ip_host, port = EXCLUDED.port;
     `;
     
-    await client.query(query, [address.toLowerCase(), ip_host, port]);
+    await client.query(query, [address.trim().toLowerCase(), ip_host, port]);
     res.status(200).send('Validator spec updated or inserted successfully.');
   } catch (error) {
     console.error('Error updating/inserting validator spec:', error);
@@ -52,7 +52,7 @@ app.get('/validator/:address', async (req, res) => {
     `;
     
     const result = await client.query(query, [address.toLowerCase()]);
-
+  
     if (result.rows.length === 0) {
       return res.status(404).send('Validator not found.');
     }
