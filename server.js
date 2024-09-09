@@ -24,23 +24,55 @@ app.get('/', (req, res) => {
 
 // Endpoint to update or insert validator specs
 app.post('/validator/update', async (req, res) => {
-  const { address, ip_host, port } = req.body;
+  const { 
+    address, 
+    ip_host, 
+    port, 
+    is_uptimerobot_active = false,  // default to false if not provided
+    is_notify_on_low_peer_count = false,  // default to false if not provided
+    low_peer_count_threshold = 0,  // default to 0 if not provided
+    last_validated_block_alert_delay = 0  // default to 0 if not provided
+  } = req.body;
 
   try {
     const query = `
-      INSERT INTO validator_specs (address, ip_host, port)
-      VALUES ($1, $2, $3)
+      INSERT INTO validator (
+        address, 
+        ip_host, 
+        port, 
+        is_uptimerobot_active, 
+        is_notify_on_low_peer_count, 
+        low_peer_count_threshold, 
+        last_validated_block_alert_delay
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       ON CONFLICT (address)
-      DO UPDATE SET ip_host = EXCLUDED.ip_host, port = EXCLUDED.port;
+      DO UPDATE SET 
+        ip_host = EXCLUDED.ip_host, 
+        port = EXCLUDED.port,
+        is_uptimerobot_active = EXCLUDED.is_uptimerobot_active,
+        is_notify_on_low_peer_count = EXCLUDED.is_notify_on_low_peer_count,
+        low_peer_count_threshold = EXCLUDED.low_peer_count_threshold,
+        last_validated_block_alert_delay = EXCLUDED.last_validated_block_alert_delay;
     `;
     
-    await client.query(query, [address.trim().toLowerCase(), ip_host, port]);
+    await client.query(query, [
+      address.trim().toLowerCase(), 
+      ip_host, 
+      port, 
+      is_uptimerobot_active, 
+      is_notify_on_low_peer_count, 
+      low_peer_count_threshold, 
+      last_validated_block_alert_delay
+    ]);
+    
     res.status(200).send('Validator spec updated or inserted successfully.');
   } catch (error) {
     console.error('Error updating/inserting validator spec:', error);
     res.status(500).send('An error occurred while updating/inserting validator spec.');
   }
 });
+
 
 app.get('/validator/:address', async (req, res) => {
   const { address } = req.params;
