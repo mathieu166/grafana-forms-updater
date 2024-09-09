@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const { Client } = require('pg'); 
 const app = express();
-const PORT = 3003;
+const PORT = 3002;
 
 // PostgreSQL connection configuration
 const client = new Client({
