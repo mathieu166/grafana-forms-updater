@@ -26,8 +26,6 @@ app.get('/', (req, res) => {
 app.post('/validator/update', async (req, res) => {
   const { 
     address, 
-    ip_host, 
-    port, 
     is_uptimerobot_active = false,  // default to false if not provided
     is_notify_on_low_peer_count = false,  // default to false if not provided
     low_peer_count_threshold = 0,  // default to 0 if not provided
@@ -38,8 +36,6 @@ app.post('/validator/update', async (req, res) => {
     const query = `
       INSERT INTO validator (
         address, 
-        ip_host, 
-        port, 
         is_uptimerobot_active, 
         is_notify_on_low_peer_count, 
         low_peer_count_threshold, 
@@ -48,8 +44,6 @@ app.post('/validator/update', async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       ON CONFLICT (address)
       DO UPDATE SET 
-        ip_host = EXCLUDED.ip_host, 
-        port = EXCLUDED.port,
         is_uptimerobot_active = EXCLUDED.is_uptimerobot_active,
         is_notify_on_low_peer_count = EXCLUDED.is_notify_on_low_peer_count,
         low_peer_count_threshold = EXCLUDED.low_peer_count_threshold,
@@ -58,8 +52,6 @@ app.post('/validator/update', async (req, res) => {
     
     await client.query(query, [
       address.trim().toLowerCase(), 
-      ip_host, 
-      port, 
       is_uptimerobot_active, 
       is_notify_on_low_peer_count, 
       low_peer_count_threshold, 
