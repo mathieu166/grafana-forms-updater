@@ -41,7 +41,7 @@ app.post('/validator/update', async (req, res) => {
         low_peer_count_threshold, 
         last_validated_block_alert_delay
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (address)
       DO UPDATE SET 
         is_uptimerobot_active = EXCLUDED.is_uptimerobot_active,
